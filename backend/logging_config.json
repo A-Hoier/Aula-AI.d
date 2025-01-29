@@ -1,0 +1,72 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s %(levelname)-8s%(name)s\t%(funcName)s\tline %(lineno)3d %(message)s ",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        },
+        "json": {
+            "()": "inspari.logging.JsonFormatter",
+            "format": "%(created)f;%(asctime)s;%(name)s;%(funcName)s;%(lineno)d;%(levelname)s;%(message)s;%(pathname)s;%(filename)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "json",
+            "filename": "/tmp/inspari-logging.log",
+            "mode": "a"
+        },
+        "web": {
+            "class": "inspari.logging.AzureBlobStorageHandler",
+            "formatter": "simple",
+            "load_dot_env": "true",
+            "env_key": "ABS_CONNECTION_STRING",
+            "log_local": "true"
+        }
+    },
+    "root": {
+        "level": "INFO",
+        "handlers": [
+            "console",
+            "file",
+            "web"
+        ]
+    },
+    "loggers": {
+        "gunicorn": {
+            "level": "INFO"
+        },
+        "gunicorn.access": {
+            "level": "WARNING"
+        },
+        "requests": {
+            "level": "WARNING"
+        },
+        "urllib3": {
+            "level": "WARNING"
+        },
+        "azure": {
+            "level": "WARNING"
+        },
+        "py4j": {
+            "level": "WARNING"
+        },
+        "snowflake.connector.cursor": {
+            "level": "WARNING"
+        },
+        "snowflake.connector.connection": {
+            "level": "WARNING"
+        },
+        "httpx": {
+            "level": "WARNING"
+        }
+    },
+    "capture_warnings": true
+}

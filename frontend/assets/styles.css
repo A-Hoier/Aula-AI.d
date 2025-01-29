@@ -1,0 +1,174 @@
+:root {
+    --primary-dark: #1a237e;
+    --primary: #283593;
+    --primary-light: #3949ab;
+    --secondary: #eceff1;
+    --text-light: #ffffff;
+    --text-dark: #263238;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    background-color: var(--primary-dark) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    color: var(--text-light) !important;
+    font-weight: 500;
+}
+
+.nav-link {
+    color: var(--text-light) !important;
+    opacity: 0.9;
+}
+
+.nav-link:hover {
+    opacity: 1;
+}
+/* 
+.input-container {
+    background-color: var(--primary);
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+}
+
+.input-container h1 {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.chat-container {
+    padding: 2rem 0;
+} */
+
+
+.input-box {
+    margin-top: 10px;
+    width: 80%;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 5%;
+    left: 10%;
+}
+
+.send-btn {
+    background-color: var(--primary);
+    color: var(--text-light);
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Settings Dropdown */
+.settings-dropdown {
+    margin-left: auto;  /* Pushes button to the right */
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease-in-out;  /* Smooth transition for hover effect */
+}
+
+.settings-dropdown:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;  /* Subtle hover effect */
+    border-color: rgba(255, 255, 255, 0.5);  /* Brighter border on hover */
+}
+
+.settings-dropdown h5 {
+    color: white;
+    margin: 0;
+    font-size: 1rem;  /* Adjust size as needed */
+}
+
+
+.settings-dropdown-item {
+    transition: all 0.2s ease-in-out;  
+}
+
+.settings-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);  
+}
+
+
+.dropdown-item {
+    color: black;
+}
+
+.dropdown-item:hover {
+    background-color: lightgrey;
+}
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    width: 60%;
+    margin: auto;
+    overflow: hidden; 
+}
+
+.chat-window {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-bubble {
+    background-color: #007AFF;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 18px 18px 0 18px;
+    max-width: 80%;
+    align-self: flex-end;
+    margin: 8px 0;
+    word-wrap: break-word;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    /* Removed scroll-snap-align as we're using overflow-anchor */
+}
+
+.bot-bubble {
+    background-color: white;
+    color: #333;
+    padding: 12px 16px;
+    border-radius: 18px 18px 18px 0;
+    max-width: 80%;
+    align-self: flex-start;
+    margin: 8px 0;
+    word-wrap: break-word;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    /* Removed scroll-snap-align as we're using overflow-anchor */
+}
+
+.input-container {
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+}
+
+.error-bubble {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    /* margin: 5px 0; */
+    max-width: 90%;
+    word-wrap:break-word;
+    margin-right:25%
+}

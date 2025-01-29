@@ -1,0 +1,9 @@
+{
+    "openai": {
+        "sys_prompt": "Answer in the same language as the question"
+    },
+    "perplexity": {
+        "sys_prompt": "Search accordingly to the user input"
+        
+    }
+}

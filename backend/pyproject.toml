@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "agent-test"
+version = "0.1.0"
+description = ""
+authors = ["Alexander Høier <Alexanderhoier@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic-ai = "^0.0.20"
+fastapi = "^0.115.7"
+uvicorn = "^0.34.0"
+pydantic-settings = "^2.7.1"
+inspari-config = "^0.1.4"
+inspari-logging = "^0.1.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
