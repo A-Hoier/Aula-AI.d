@@ -26,7 +26,7 @@ def layout():
         [
             render_chat_container(),
             render_input_box(),
-            # html.Div(id="scroll-output", style={"display": "none"}),
+            html.Div(id="scroll-output", style={"display": "none"}),
         ]
     )
 

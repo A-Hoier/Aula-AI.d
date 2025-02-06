@@ -28,10 +28,26 @@ app.layout = html.Div(
         render_navbar(),
         dash.page_container,
         *app_stores,
-    ]
+    ],
+    className="full-screen-div",
 )
 
-
+app.clientside_callback(
+    """
+    function(data) {
+       // Delay the scroll update to let the DOM fully render the new message
+       setTimeout(function(){
+           const chatWindow = document.getElementById('chat-window');
+           if (chatWindow) {
+             chatWindow.scrollTop = chatWindow.scrollHeight;
+           }
+       }, 100);  // Adjust the delay as needed
+       return '';
+    }
+    """,
+    Output("scroll-output", "children"),
+    Input("conversation-store", "data"),
+)
 if __name__ == "__main__":
     # app.run_server()
     app.run(

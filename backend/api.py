@@ -3,13 +3,15 @@ import uvicorn
 
 from fastapi import FastAPI, File, Form, Response, UploadFile, HTTPException, status
 
+from lib.agent import get_response
+
 app = FastAPI()
 
 
 @app.get("/chat/")  # type: ignore
 async def chat(data: ChatInput):
     """Input: user input, output: AI response."""
-    return {"response": "Success"}
+    return {"response": await get_response(data.user_input)}
 
 
 if __name__ == "__main__":
