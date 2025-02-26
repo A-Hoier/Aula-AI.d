@@ -1,0 +1,17 @@
+[project]
+name = "agent-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dash>=2.18.2",
+    "dash-bootstrap-components>=1.7.1",
+    "dash-iconify>=0.1.2",
+    "inspari-config>=0.1.5",
+    "inspari-logging>=0.1.7",
+    "pydantic>=2.10.6",
+    "pydantic-ai>=0.0.27",
+    "python-dotenv>=1.0.1",
+    "uvicorn>=0.34.0",
+]

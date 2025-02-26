@@ -1,7 +1,7 @@
 from dash import html, Input, Output, State, callback, dcc
 import dash
 import dash_bootstrap_components as dbc
-from lib.api_service import api_service
+from lib.api_service import llm_service
 
 dash.register_page(__name__, path="/agents")
 
