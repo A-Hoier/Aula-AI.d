@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 
 from lib.models import AIResponse, Conversation, Message, MsgPair
 from lib.api_service import llm_service
+from lib.utils import format_conversation_for_model
 
 load_dotenv()
 WELCOME_MSG = "WELCOME_MSG"
@@ -82,10 +83,10 @@ def process_ai_response(user_input, conversation_data):
         raise PreventUpdate
 
     conversation = Conversation(**conversation_data)
-
+    formatted_conversation = format_conversation_for_model(conversation)
     # Call the API for a response
     try:
-        bot_reply = llm_service.chat(user_input)
+        bot_reply = llm_service.chat(formatted_conversation)
         if not bot_reply:
             bot_reply = "Sorry, there was an issue connecting to the chat service."
     except requests.RequestException:
