@@ -1,55 +1,47 @@
-from dash import Dash, html, dcc, Input, Output
-import dash
-import dash_bootstrap_components as dbc
-from flask import Flask
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
-from lib.stores import app_stores
-from lib.components.chat_components import render_navbar
+from lib.web_search import get_response
 
-server = Flask(__name__)
-
-
-# Initialize the Dash app with Bootstrap
-app = Dash(
-    __name__,
-    use_pages=True,
-    external_stylesheets=[
-        dbc.themes.BOOTSTRAP,
-        "https://use.fontawesome.com/releases/v5.15.4/css/all.css",
-    ],
-    suppress_callback_exceptions=True,
-    server=server,
+# Set up FastAPI app
+app = FastAPI()
+# Allow CORS for all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Set the app layout
-app.layout = html.Div(
-    [
-        dcc.Location(id="url", refresh=False),
-        render_navbar(),
-        dash.page_container,
-        *app_stores,
-    ],
-    className="full-screen-div",
-)
 
-app.clientside_callback(
+@app.get("/", response_class=HTMLResponse)
+async def root():
     """
-    function(data) {
-       // Delay the scroll update to let the DOM fully render the new message
-       setTimeout(function(){
-           const chatWindow = document.getElementById('chat-window');
-           if (chatWindow) {
-             chatWindow.scrollTop = chatWindow.scrollHeight;
-           }
-       }, 100);  // Adjust the delay as needed
-       return '';
-    }
-    """,
-    Output("scroll-output", "children"),
-    Input("conversation-store", "data"),
-)
+    html code with a welcome, and a link to docs"""
+    return """
+    <html>
+        <head>
+            <title>Welcome to the FastAPI app</title>
+        </head>
+        <body>
+            <h1>Welcome to the FastAPI app</h1>
+            <p><a href="/docs">Go to docs</a></p>
+        </body>
+    </html>
+    """
+
+
+@app.get("/chat")
+async def chat(query: str):
+    """
+    Chat endpoint
+    """
+    return await get_response(query)
+
+
 if __name__ == "__main__":
-    # app.run_server()
-    app.run(
-        debug=True, dev_tools_hot_reload=True
-    )  # debug=False, host="0.0.0.0", port=80)
+    import uvicorn
+
+    uvicorn.run(app)

@@ -5,13 +5,22 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aiohttp>=3.11.18",
     "dash>=2.18.2",
-    "dash-bootstrap-components>=1.7.1",
     "dash-iconify>=0.1.2",
+    "dash-mantine-components>=1.1.1",
+    "fastapi>=0.115.12",
+    "googlesearch-python>=1.3.0",
     "inspari-config>=0.1.5",
     "inspari-logging>=0.1.7",
+    "logfire>=3.14.0",
     "pydantic>=2.10.6",
-    "pydantic-ai>=0.0.27",
+    "pydantic-ai==0.1.3",
     "python-dotenv>=1.0.1",
     "uvicorn>=0.34.0",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
 ]
