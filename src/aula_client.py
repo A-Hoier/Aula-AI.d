@@ -123,7 +123,7 @@ class AulaClient:
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
             if not self.active_child:
-                raise ValueError(
+                return ValueError(
                     "Remember to set active child with client.set_active_child(name:str)"
                 )
             return func(self, *args, **kwargs)
@@ -184,47 +184,45 @@ class AulaClient:
         return overview
 
     def fetch_messages(self) -> list:
-        """Fetch the latest unread messages."""
+        """Fetch the latest messages."""
         self._ensure_session()
         response = self._session.get(
             self.apiurl
             + "?method=messaging.getThreads&sortOn=date&orderDirection=desc&page=0",
             verify=True,
         ).json()
-
+        print(response)
         messages = []
         for thread in response["data"]["threads"]:
-            if not thread["read"]:
-                thread_response = self._session.get(
-                    self.apiurl
-                    + f"?method=messaging.getMessagesForThread&threadId={thread['id']}&page=0",
-                    verify=True,
-                ).json()
+            thread_response = self._session.get(
+                self.apiurl
+                + f"?method=messaging.getMessagesForThread&threadId={thread['id']}&page=0",
+                verify=True,
+            ).json()
 
-                if thread_response["status"]["code"] == 403:
-                    messages.append(
-                        {
-                            "subject": "Følsom besked",
-                            "text": "Log ind på Aula med MitID for at læse denne besked.",
-                            "sender": "Ukendt afsender",
-                        }
-                    )
-                else:
-                    for msg in thread_response["data"]["messages"]:
-                        if msg["messageType"] == "Message":
-                            messages.append(
-                                {
-                                    "subject": thread_response["data"].get(
-                                        "subject", ""
-                                    ),
-                                    "text": msg.get("text", {}).get(
-                                        "html", msg.get("text", "intet indhold...")
-                                    ),
-                                    "sender": msg["sender"].get(
-                                        "fullName", "Ukendt afsender"
-                                    ),
-                                }
-                            )
+            if thread_response["status"]["code"] == 403:
+                messages.append(
+                    {
+                        "subject": "Følsom besked",
+                        "text": "Log ind på Aula med MitID for at læse denne besked.",
+                        "sender": "Ukendt afsender",
+                    }
+                )
+            else:
+                for msg in thread_response["data"]["messages"]:
+                    if msg["messageType"] == "Message":
+                        messages.append(
+                            {
+                                "subject": thread_response["data"].get("subject", ""),
+                                "text": msg.get("text", {}).get(
+                                    "html", msg.get("text", "intet indhold...")
+                                ),
+                                "sender": msg["sender"].get(
+                                    "fullName", "Ukendt afsender"
+                                ),
+                                "date": f"{msg['sendDateTime'][:-6].replace('T', ' ')}",
+                            }
+                        )
 
         _LOGGER.debug(f"Latest messages: {messages}")
         return messages
@@ -378,34 +376,3 @@ class AulaClient:
 
 
 client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
-
-# Fetch basic profile data
-# basic_data = client.fetch_basic_data()
-# print("Basic Data:", basic_data)
-
-# Fetch daily overview
-# overview = client.fetch_daily_overview("Olli")
-# print("Daily Overview:", overview)
-
-# Fetch latest messages
-# messages = client.fetch_messages()
-# print("Messages:", messages)
-
-# Fetch calendar for next 7 days
-"""client.set_active_child("Nellie")
-calendar = client.fetch_calendar(days=7, structured=True)
-print("Calendar Events by Day:")
-for date, events in calendar.items():
-    print(f"\n=== {date} ===")
-    for event in events:
-        teacher = (
-            event.get("lesson", {})
-            .get("participants", [{}])[0]
-            .get("teacherName", "Unknown")
-        )
-        print(f"{event['formatted_time']} - {event['title']} (Teacher: {teacher})")
-    break"""
-
-# # Fetch gallery items
-# gallery = client.fetch_gallery()
-# print("Gallery Items:", gallery)

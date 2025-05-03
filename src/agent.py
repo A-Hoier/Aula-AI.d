@@ -16,6 +16,7 @@ from src.tools import ResearchDependencies, SearchDataclass, fetch_url, get_sear
 
 load_dotenv()
 current_time = datetime.now().isoformat()
+aula = AulaClient(os.getenv("AULA_USER"), os.getenv("AULA_PWD"))
 
 
 class ResearchResult(BaseModel):
@@ -67,8 +68,8 @@ You're a helpful research assistant, you are an expert in research
         system_prompt = f"""current_time: {current_time}
 You're a helpful research assistant. You're an expert in navigating the danish school communication system, Aula.
 Only use the tools if the user is talking about the school, institution or about their kids.
+Make sure to set the active child before using any of the tools (except for fetch_basic_data).
 """
-        aula = AulaClient(os.getenv("AULA_USER"), os.getenv("AULA_PWD"))
         tools = [
             Tool(
                 name="set_active_child",
@@ -82,31 +83,19 @@ Only use the tools if the user is talking about the school, institution or about
             ),
             Tool(
                 name="fetch_daily_overview",
-                description="Return today’s presence overview for the active child.",
+                description="Return today’s presence overview for the active child. Requires active child to be set.",
                 function=aula.fetch_daily_overview,
             ),
             Tool(
                 name="fetch_messages",
-                description="Fetch the latest unread message for the active child.",
+                description="Fetch the latest unread message for the active child. Requires active child to be set.",
                 function=aula.fetch_messages,
             ),
-            # Tool(
-            #     name="fetch_calendar",
-            #     description="Fetch upcoming calendar events for the next N days. Expects an integer argument.",
-            #     function=lambda days: aula.fetch_calendar(days=int(days)),
-            # ),
-            # Tool(
-            #     name="fetch_gallery",
-            #     description="Fetch gallery items (images & posts) for the active child.",
-            #     function=lambda _: aula.fetch_gallery(),
-            # ),
-            # Tool(
-            #     name="custom_api_call",
-            #     description="Call any Aula API endpoint. Pass dict{'uri':str, 'post_data':optional JSON string}.",
-            #     function=lambda args: aula.custom_api_call(
-            #         uri=args["uri"], post_data=args.get("post_data")
-            #     ),
-            # ),
+            Tool(
+                name="fetch_calendar",
+                description="Fetch upcoming calendar events for the next N days. Expects an integer argument. Requires active child to be set.",
+                function=aula.fetch_calendar,
+            ),
         ]
 
     return Agent(
