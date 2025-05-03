@@ -56,16 +56,17 @@ The application uses \[pydantic-settings] to load variables from `.env`.
 #### Start the backend
 
 ```bash
-uvicorn api:app --reload
+uv run uvicorn api:app --reload
 ```
 
 * The API will be available at `http://localhost:8000`
 * Swagger UI docs at `http://localhost:8000/docs`
 
 #### Start the Dash UI
+in another terminal:
 
 ```bash
-python app.py
+uv run python app.py
 ```
 
 * Opens a local server (default `http://127.0.0.1:8050`) with the chat interface.
@@ -73,29 +74,4 @@ python app.py
 #### Chatting
 
 * Select an **LLM model** (e.g. `gpt-4o`) and an **agent** (`research_agent` or `aula_agent`).
-* Type a message and hit **Send**.
-
-#### API Endpoints
-
-* `GET /`: simple HTML welcome page.
-* `GET /chat?query=<text>&model=<model>&agent=<agent>`: chat endpoint returning AI-generated response.
-
-### Testing
-
-```bash
-python test.py
-```
-
-Ensure `.env` contains valid Aula credentials to test `AulaClient`.
-
-### Contributing
-
-1. Fork the repo
-2. Create a new branch: `git checkout -b feature/your-feature`
-3. Commit your changes
-4. Push to the branch
-5. Open a pull request
-
-### License
-
-MIT © INSPARI
+* Type a message and hit **Send** or **enter**.
