@@ -1,4 +1,5 @@
 from functools import lru_cache
+
 from inspari.config import load_dotenv
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings
@@ -21,6 +22,9 @@ class AppSettings(BaseSettings):
 
     # Prompts
     PROMPTS: dict = {}
+
+    GOOGLE_SEARCH_API_KEY: SecretStr
+    GOOGLE_SEARCH_cx: SecretStr
 
     def update_prompts(self, prompts: dict):
         self.PROMPTS = prompts
