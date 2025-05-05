@@ -25,7 +25,7 @@ Please check src/constants.py, and list available models.
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:A-Hoier/agents-playground.git
    cd agent-playground
    ```
 
