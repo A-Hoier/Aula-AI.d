@@ -23,11 +23,6 @@ class ResearchDependencies:
     todays_date: str
 
 
-@dataclass
-class FetchURLInput:
-    url: str
-
-
 async def google_search(query, **kwargs):
     """
     Perform a Google search using the Custom Search API.

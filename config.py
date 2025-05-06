@@ -12,22 +12,13 @@ class AppSettings(BaseSettings):
     API_VERSION: str
     AZURE_OPENAI_MODEL: str
 
-    # Perplexity
-    PERPLEXITY_API_KEY: SecretStr
-    PERPLEXITY_ENDPOINT: str
-    PERPLEXITY_MODEL: str
-
-    # Storage Account
-    STORAGE_ACCOUNT_CONNECTION_STRING: SecretStr
-
-    # Prompts
-    PROMPTS: dict = {}
+    ANTHROPIC_API_KEY: SecretStr
 
     GOOGLE_SEARCH_API_KEY: SecretStr
     GOOGLE_SEARCH_cx: SecretStr
 
-    def update_prompts(self, prompts: dict):
-        self.PROMPTS = prompts
+    AULA_USER: str
+    AULA_PWD: SecretStr
 
 
 @lru_cache()
