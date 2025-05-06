@@ -2,7 +2,6 @@ import datetime
 import functools
 import json
 import logging
-import os
 from collections import defaultdict
 
 import requests
@@ -193,7 +192,7 @@ class AulaClient:
             verify=True,
         ).json()
         print(response)
-        messages = []
+        messages = {}
         for thread in response["data"]["threads"]:
             thread_response = self._session.get(
                 self.apiurl
@@ -202,19 +201,19 @@ class AulaClient:
             ).json()
 
             if thread_response["status"]["code"] == 403:
-                messages.append(
-                    {
-                        "subject": "Følsom besked",
-                        "text": "Log ind på Aula med MitID for at læse denne besked.",
-                        "sender": "Ukendt afsender",
-                    }
-                )
+                messages[thread["id"]] = {
+                    "subject": "Følsom besked",
+                    "text": "Log ind på Aula med MitID for at læse denne besked.",
+                    "sender": "Ukendt afsender",
+                }
+
             else:
+                messages[thread["id"]] = {"subject": thread["subject"]}
+                messages[thread["id"]]["text"] = []
                 for msg in thread_response["data"]["messages"]:
                     if msg["messageType"] == "Message":
-                        messages.append(
+                        messages[thread["id"]]["text"].append(
                             {
-                                "subject": thread_response["data"].get("subject", ""),
                                 "text": msg.get("text", {}).get(
                                     "html", msg.get("text", "intet indhold...")
                                 ),
@@ -376,7 +375,7 @@ class AulaClient:
             return {"raw_response": response.text}
 
 
-client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
+# client = AulaClient(os.getenv("AULA_USER"), os.getenv("AULA_PWD"))
 
 
 # Fetch basic profile data
@@ -404,3 +403,4 @@ client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
 #             .get("teacherName", "Unknown")
 #         )
 #         print(f"{event['formatted_time']} - {event['title']} (Teacher: {teacher})")
+#     break
