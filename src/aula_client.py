@@ -77,7 +77,7 @@ class AulaClient:
 
         if not success:
             _LOGGER.error("Failed to log in after multiple redirects")
-            raise Exception("Login failed")
+            raise ValueError("Login failed, please check your credentials.")
 
         apiver = 20
         api_success = False
@@ -152,6 +152,9 @@ class AulaClient:
         """Fetch basic profile data from Aula."""
         self._ensure_session()
         children_data = {}
+        if not self._profiles:
+            _LOGGER.debug("No profiles found")
+            raise ValueError("No profiles found, Please check your credentials.")
         for profile in self._profiles:
             for child in profile["children"]:
                 child_id = str(child["id"])
