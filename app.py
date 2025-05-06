@@ -8,6 +8,8 @@ import requests
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 from dotenv import load_dotenv
+from flask import Flask
+from starlette.middleware.wsgi import WSGIMiddleware
 
 from src.constants import AVAILABLE_AGENTS, AVAILABLE_MODELS
 
@@ -205,5 +207,16 @@ def display_messages(messages, is_typing):
     return children, is_typing
 
 
+server: Flask = app.server  # type: ignore
+
+# Create an ASGI application by wrapping the Flask app
+asgi_app = WSGIMiddleware(server)
+
+
+@server.route("/health")
+def health():
+    return "OK"
+
+
 if __name__ == "__main__":
-    app.run(debug=True, dev_tools_hot_reload=True)
+    app.run_server(debug=True, dev_tools_hot_reload=True)
