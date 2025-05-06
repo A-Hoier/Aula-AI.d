@@ -1,0 +1,26 @@
+services:
+  aula-aid-backend:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    container_name: aula-aid-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .env:/.env
+      - ${HOME}/.azure:/root/.azure
+    command: [ "bash", "api.sh" ]
+  aula-aid-frontend:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    container_name: aula-aid-frontend
+    ports:
+      - "8050:8050"
+    environment:
+      - BACKEND_URL=http://aula-aid-backend:8000/
+    volumes:
+      - .env:/.env
+      - ${HOME}/.azure:/root/.azure
+    command: [ "bash", "app.sh" ]
+  

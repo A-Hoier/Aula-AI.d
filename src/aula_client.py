@@ -376,3 +376,31 @@ class AulaClient:
 
 
 client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
+
+
+# Fetch basic profile data
+# basic_data = client.fetch_basic_data()
+# print("Basic Data:", basic_data)
+
+# Fetch daily overview
+# overview = client.fetch_daily_overview("Olli")
+# print("Daily Overview:", overview)
+
+# Fetch latest messages
+# messages = client.fetch_messages()
+# print("Messages:", messages)
+
+# Fetch calendar for next 7 days
+# client.set_active_child("Nellie")
+# calendar = client.fetch_calendar(days=7, structured=True)
+# print("Calendar Events by Day:")
+# for date, events in calendar.items():
+#     print(f"\n=== {date} ===")
+#     for event in events:
+#         teacher = (
+#             event.get("lesson", {})
+#             .get("participants", [{}])[0]
+#             .get("teacherName", "Unknown")
+#         )
+#         print(f"{event['formatted_time']} - {event['title']} (Teacher: {teacher})")
+#     break

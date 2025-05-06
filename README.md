@@ -53,6 +53,15 @@ The application uses \[pydantic-settings] to load variables from `.env`.
 
 ### Usage
 
+
+#### Use docker compose:
+
+
+```bash
+docker compose up
+```
+
+### Alternatively, run the backend and frontend separately:
 #### Start the backend
 
 ```bash
