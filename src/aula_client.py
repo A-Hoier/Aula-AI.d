@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 load_dotenv()
 _LOGGER = logging.getLogger(__name__)
 
-CHILDREN: list = ",".split(os.getenv("CHILDREN"))
-
 
 class AulaClient:
     """Aula client for connecting and fetching specific data."""
@@ -79,7 +77,7 @@ class AulaClient:
 
         if not success:
             _LOGGER.error("Failed to log in after multiple redirects")
-            raise Exception("Login failed")
+            raise ValueError("Login failed, please check your credentials.")
 
         apiver = 20
         api_success = False
@@ -154,6 +152,9 @@ class AulaClient:
         """Fetch basic profile data from Aula."""
         self._ensure_session()
         children_data = {}
+        if not self._profiles:
+            _LOGGER.debug("No profiles found")
+            raise ValueError("No profiles found, Please check your credentials.")
         for profile in self._profiles:
             for child in profile["children"]:
                 child_id = str(child["id"])
@@ -403,4 +404,3 @@ client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
 #             .get("teacherName", "Unknown")
 #         )
 #         print(f"{event['formatted_time']} - {event['title']} (Teacher: {teacher})")
-#     break

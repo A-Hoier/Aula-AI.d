@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 from uuid import uuid4
 
@@ -7,20 +6,15 @@ import dash_mantine_components as dmc
 import requests
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
-from dotenv import load_dotenv
 from flask import Flask
 from starlette.middleware.wsgi import WSGIMiddleware
 
-from src.constants import AVAILABLE_AGENTS, AVAILABLE_MODELS
-
-load_dotenv()
-
-print(os.getenv("BACKEND_URL"))
+from config import AVAILABLE_AGENTS, AVAILABLE_MODELS, app_settings
 
 
 def send_query(text: str, llm: str, agent: str) -> str:
     response = requests.get(
-        os.getenv("BACKEND_URL") + "chat",
+        app_settings().BACKEND_URL + "chat",
         params={"query": text, "model": llm, "agent": agent},
     )
     if response.status_code != 200:
@@ -219,4 +213,4 @@ def health():
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, dev_tools_hot_reload=True)
+    app.run(debug=True, dev_tools_hot_reload=True)
