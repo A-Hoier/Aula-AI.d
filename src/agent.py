@@ -1,22 +1,25 @@
 from __future__ import annotations as _annotations
 
-import os
 from datetime import datetime
 
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, Tool
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
+from config import app_settings
 from src.aula_client import AulaClient
 from src.constants import AVAILABLE_AGENTS, AVAILABLE_MODELS
-from src.llm import OpenAI
-from src.tools import ResearchDependencies, SearchDataclass, fetch_url, get_search
+from src.llm import get_async_openai_client
+from src.research_tool import (
+    ResearchDependencies,
+    SearchDataclass,
+    fetch_url,
+    get_search,
+)
 
-load_dotenv()
 current_time = datetime.now().isoformat()
-aula = AulaClient(os.getenv("AULA_USER"), os.getenv("AULA_PWD"))
+aula = AulaClient(app_settings().AULA_USER, app_settings().AULA_PWD.get_secret_value())
 
 
 class ResearchResult(BaseModel):
@@ -37,13 +40,12 @@ def create_agent(model: str, agent: str) -> Agent:
     Args:
         model_name (str): The name of the model to use.
     """
-    # pick provider & wrap model name if needed
     if model not in AVAILABLE_MODELS:
         raise ValueError(f"Model {model} not in {AVAILABLE_MODELS}")
     if agent not in AVAILABLE_AGENTS:
         raise ValueError(f"Agent {agent} not in {AVAILABLE_AGENTS}")
     if not model.startswith("anthropic"):
-        client = OpenAI.get_async_client()
+        client = get_async_openai_client()
         model = OpenAIModel(model, provider=OpenAIProvider(openai_client=client))
     if agent == "research_agent":
         system_prompt = f"""current_time: {current_time}
@@ -78,7 +80,7 @@ Make sure to set the active child before using any of the tools (except for fetc
             ),
             Tool(
                 name="fetch_basic_data",
-                description="Return some basic info on all children’s {id: {name, institution}}.",
+                description="Return some basic info on all children’s {name: institution}.",
                 function=aula.fetch_basic_data,
             ),
             Tool(

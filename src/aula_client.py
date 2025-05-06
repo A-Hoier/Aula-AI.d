@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 load_dotenv()
 _LOGGER = logging.getLogger(__name__)
 
-CHILDREN: list = ",".split(os.getenv("CHILDREN"))
-
 
 class AulaClient:
     """Aula client for connecting and fetching specific data."""
@@ -403,4 +401,3 @@ client = AulaClient(os.getenv("USERNAME"), os.getenv("PASSWORD"))
 #             .get("teacherName", "Unknown")
 #         )
 #         print(f"{event['formatted_time']} - {event['title']} (Teacher: {teacher})")
-#     break
