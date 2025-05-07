@@ -4,16 +4,15 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, Tool
+from pydantic_ai.exceptions import ModelHTTPError, UserError
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
-from config import app_settings
+from config import AVAILABLE_AGENTS, AVAILABLE_MODELS, app_settings
 from src.aula_client import AulaClient
-from src.constants import AVAILABLE_AGENTS, AVAILABLE_MODELS
 from src.llm import get_async_openai_client
 from src.research_tool import (
-    ResearchDependencies,
-    SearchDataclass,
+    ResearchDeps,
     fetch_url,
     get_search,
 )
@@ -40,13 +39,17 @@ def create_agent(model: str, agent: str) -> Agent:
     Args:
         model_name (str): The name of the model to use.
     """
+
     if model not in AVAILABLE_MODELS:
         raise ValueError(f"Model {model} not in {AVAILABLE_MODELS}")
     if agent not in AVAILABLE_AGENTS:
         raise ValueError(f"Agent {agent} not in {AVAILABLE_AGENTS}")
     if not model.startswith("anthropic"):
-        client = get_async_openai_client()
-        model = OpenAIModel(model, provider=OpenAIProvider(openai_client=client))
+        try:
+            client = get_async_openai_client()
+            model = OpenAIModel(model, provider=OpenAIProvider(openai_client=client))
+        except Exception as e:
+            raise ValueError(f"Error creating model {model}: {e}")
     if agent == "research_agent":
         system_prompt = f"""current_time: {current_time}
 You're a helpful research assistant, you are an expert in research 
@@ -99,14 +102,18 @@ Make sure to set the active child before using any of the tools (except for fetc
                 function=aula.fetch_calendar,
             ),
         ]
-
-    return Agent(
-        model=model,
-        deps_type=ResearchDependencies,
-        # output_type=ResearchResult,
-        system_prompt=system_prompt,
-        tools=tools,
-    )
+    try:
+        return Agent(
+            model=model,
+            # deps_type=ResearchDependencies,
+            # output_type=ResearchResult,
+            system_prompt=system_prompt,
+            tools=tools,
+        )
+    except UserError as e:
+        raise ValueError(f"Error creating agent {agent}: {e}")
+    except ModelHTTPError as e:
+        raise ValueError(f"Error creating model {model}: {e}")
 
 
 async def get_response(query: str, model: str, agent: str) -> str:
@@ -116,9 +123,13 @@ async def get_response(query: str, model: str, agent: str) -> str:
 
     # pick your model at runtime:
     agent = create_agent(model, agent)
-
     # prepare your deps
-    deps = SearchDataclass(max_results=3, todays_date=current)
+    deps = ResearchDeps(
+        max_results=3,
+        todays_date=current,
+        search_api_key=app_settings().GOOGLE_SEARCH_API_KEY.get_secret_value(),
+        search_api_cx=app_settings().GOOGLE_SEARCH_cx.get_secret_value(),
+    )
 
     # run!
     result = await agent.run(query, deps=deps)

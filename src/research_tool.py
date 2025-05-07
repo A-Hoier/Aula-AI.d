@@ -13,14 +13,11 @@ from config import app_settings
 
 
 @dataclass
-class SearchDataclass:
+class ResearchDeps:
     max_results: int
     todays_date: str
-
-
-@dataclass
-class ResearchDependencies:
-    todays_date: str
+    search_api_key: str
+    search_api_cx: str
 
 
 async def google_search(query, **kwargs):
@@ -56,7 +53,7 @@ async def google_search(query, **kwargs):
 
 
 async def get_search(
-    search_data: RunContext[SearchDataclass], query: str, query_number: int
+    search_data: RunContext[ResearchDeps], query: str, query_number: int
 ) -> dict[str, Any]:
     """Perform a google search for a given query.
 
