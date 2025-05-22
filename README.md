@@ -26,7 +26,7 @@ Please check src/constants.py, and list available models.
 
    ```bash
    git clone git@github.com:A-Hoier/Aula-AI.d.git
-   cd agent-playground
+   cd Aula-AI.d
    ```
 
 3. Install dependencies:
